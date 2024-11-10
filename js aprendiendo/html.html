@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Juego</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="main-menu">
+        <h1>Selecciona una opción</h1>
+        <button id="option1-button">Opción 1</button>
+        <button id="option2-button">Opción 2</button>
+        <button id="option3-button">Opción 3</button>
+    </div>
+
+    <div id="option1-screen" class="hidden">
+        <p>El reciclaje es un proceso clave para la gestión de residuos y la conservación del medio ambiente. Al
+            reciclar materiales como papel, plástico, vidrio y metal, se reduce la cantidad de desechos que terminan en
+            los vertederos y se disminuye la necesidad de extraer nuevos recursos naturales. Además, el reciclaje ayuda
+            a ahorrar energía y a reducir la contaminación. Las comunidades que promueven el reciclaje también fomentan
+            la educación ambiental y la conciencia sobre la importancia de cuidar el planeta para futuras generaciones.
+        </p>
+        <button id="continue-option1-button">Continuar</button>
+    </div>
+
+    <div id="option2-screen" class="hidden">
+        <p>
+            La energía eólica es una fuente de energía renovable que utiliza la fuerza del viento para generar
+            electricidad. Mediante el uso de aerogeneradores, el viento hace girar las aspas que están conectadas a un
+            generador, produciendo así energía limpia. La energía eólica no produce emisiones contaminantes y tiene un
+            impacto ambiental reducido en comparación con las fuentes de energía tradicionales como el carbón y el
+            petróleo. Además, es una fuente de energía inagotable, ya que el viento es un recurso natural que no se
+            agota.</p>
+        <button id="continue-option2-button">Continuar</button>
+    </div>
+
+    <div id="option3-screen" class="hidden">
+        <p>Asumir la tarea del pensar, conlleva la posibilidad de crear y recrear un sentido para la vida; implica que,
+            aun cuando no lleguemos a respuestas definitivas, llegaremos a respuestas mejores que las que tenemos ahora
+            y que nos permitirán
+            Vivir una vida más realizada y autónoma. Sócrates fue muy claro al respecto al afirmar que una vida sin
+            examen, sin
+            Reflexión, no tenía objeto de ser vivida. Además, el pensar evita que caigamos presos del engaño y que nos
+            admiramos
+            A cualquier código o regla sin reflexión previa. Pero la razón más importante está en el vinculo fundamental
+            que hay
+            Entre el pensar y el mal. Fue precisamente cuando Hanna Arendt cubría el juicio de Adolfo Eichmann en
+            Jerusalén,
+            responsable nazi de la deportación y muerte de los judíos, que la relación entre el mal y el pensar surgió
+            como una problemática. El verificar que Eichmann no era un «hombre malo», llevó a Arendt a preguntarse si es
+            posible realizar
+            (tanta) maldad sin ser una mala persona. Su obra deja en claro que sí es posible y que este tipo de mal es
+            el «mal banal» fruto de la incapacidad de pensar. La obra sobre Eichmann evidencia que una persona sin
+            maldad y sin especiales motivos para el mal es capaz de infinito mal si no es capaz de pensar.</p>
+        <button id="continue-option3-button">Continuar</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <h2 id="quiz-question"></h2>
+        <div id="quiz-answers"></div>
+        <button id="next-button" class="hidden">Siguiente</button>
+    </div>
+
+    <div id="congratulations-screen" class="hidden">
+        <h2>¡Felicidades! Has completado el quiz.</h2>
+        <button id="back-to-menu-button">Volver al menú</button>
+    </div>
+
+    <audio id="correct-sound" src="correct.mp3"></audio>
+    <audio id="incorrect-sound" src="incorrect.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
