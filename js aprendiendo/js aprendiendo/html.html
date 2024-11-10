@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interactivo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="main-menu">
+            <h1>Elige tu Tema</h1>
+            <button id="option1-button" class="option-button">1. Reciclaje</button>
+            <button id="option2-button" class="option-button">2. Energía Eólica</button>
+            <button id="option3-button" class="option-button">1. El Arte de Pensar</button>
+        </div>
+
+        <div id="option1-screen" class="hidden option-screen">
+            <p>¡Descubre el poder transformador del reciclaje! Este proceso no es solo una acción, sino un compromiso con nuestro planeta. Al reciclar, no solo reducimos residuos, sino que creamos un ciclo de sostenibilidad que beneficia a comunidades enteras. Cada objeto que reciclamos es un paso hacia un futuro más limpio y consciente.</p>
+            <button id="continue-option1-button" class="continue-button">Comenzar Quiz</button>
+        </div>
+
+        <div id="option2-screen" class="hidden option-screen">
+            <p>La energía eólica representa la innovación y esperanza para un mundo más sostenible. Imagina convertir la fuerza del viento en electricidad limpia, sin emisiones contaminantes. Cada aerogenerador es un gigante silencioso que nos acerca a un futuro donde la tecnología y la naturaleza trabajan en perfecta armonía.</p>
+            <button id="continue-option2-button" class="continue-button">Comenzar Quiz</button>
+        </div>
+
+        <div id="option3-screen" class="hidden option-screen">
+            <p>Pensar no es un lujo, es una necesidad. Es el arma más poderosa contra la manipulación y la ignorancia. Cuando reflexionamos, no solo mejoramos nuestras respuestas, sino que nos liberamos de cadenas mentales que nos limitan. El pensamiento crítico es la llave maestra que abre las puertas de la comprensión profunda.</p>
+            <button id="continue-option3-button" class="continue-button">Comenzar Quiz</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <h2 id="quiz-question"></h2>
+            <div id="quiz-answers"></div>
+            <button id="next-button" class="hidden">Siguiente</button>
+        </div>
+
+        <div id="congratulations-screen" class="hidden">
+            <h2>¡Felicidades! Has completado el quiz.</h2>
+            <button id="back-to-menu-button" class="continue-button">Volver al Menú</button>
+        </div>
+    </div>
+
+    <audio id="correct-sound" src="correct.mp3"></audio>
+    <audio id="incorrect-sound" src="incorrect.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
