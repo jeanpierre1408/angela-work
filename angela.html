@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-content {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .option {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+        }
+
+        .option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .next-button {
+            display: block;
+            margin: 20px 0;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .next-button:hover {
+            background: #0056b3;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 60px;
+            clear: both;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #dee2e6;
+            border-radius: 50%;
+        }
+
+        .dot.active {
+            background: #007bff;
+        }
+
+        #results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .congratulations {
+            font-size: 24px;
+            color: #28a745;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .score-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px auto;
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .background {
+            stroke: #f0f0f0;
+        }
+
+        .progress-ring .progress {
+            stroke: #28a745;
+            transition: stroke-dasharray 0.5s ease;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .answers-review {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .answer-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .correct {
+            color: #28a745;
+            margin-left: 10px;
+        }
+
+        .incorrect {
+            color: #dc3545;
+            margin-left: 10px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="quiz-content"></div>
+        <div id="results">
+            <div class="congratulations">¡Felicidades por completar el quiz!</div>
+            <div class="score-container">
+                <svg class="progress-ring" viewBox="0 0 100 100">
+                    <circle class="background" cx="50" cy="50" r="45" />
+                    <circle class="progress" cx="50" cy="50" r="45" />
+                </svg>
+                <div class="score-text">0%</div>
+            </div>
+            <div class="answers-review"></div>
+        </div>
+        <button id="next-button" class="next-button">Siguiente</button>
+        <div class="progress-dots" id="progress-dots"></div>
+    </div>
+
+    <script>
+        const quizContent = [
+            {
+                type: 'text',
+                content: `Un tsunami o maremoto es una serie de olas gigantescas que se produce en una masa
+de agua al ser empujada violentamente por una fuerza que la desplaza verticalmente.
+Terremotos, erupciones volcánicas, deslizamiento del límite entre dos de las placas tectónicas
+de la tierra (que son placas de roca de 15 a 200 metros de espesor que apoyan los continentes
+de la Tierra y los mares en un océano subterráneo de material semisólido mucho más caliente)
+pueden generar este fenómeno.
+Los tsunamis pueden viajar a más de 800 kilómetros por hora en el punto más profundo del
+agua, pero disminuyen la velocidad a medida que se acercan a la costa, y finalmente llegan a
+la costa con velocidades entre los 32 y 48 kilómetros por hora. La energía de la velocidad de
+la ola se transfiere a la altura y la fuerza bruta a medida que se acerca a la orilla. Teniendo en
+cuenta que la profundidad habitual del océano Pacífico es de unos 4000 metros, se pueden
+provocar olas que se mueven a 700 km/h.
+Si bien la causa más frecuente para la formación de olas gigantes son los terremotos ocurridos
+en el fondo marino (cuando este se mueve violentamente en sentido vertical, el océano ve
+alterado su equilibrio natural, entonces, cuando la inmensa masa de agua trata de recuperar
+su equilibrio, se generan las olas gigantescas), no todos los terremotos generan tsunamis, sino
+solo aquellos de magnitud considerable que ocurren bajo el lecho marino y que sean capaces
+de deformarlo.
+
+
+Asimismo, si bien cualquier océano puede experimentar un tsunami, es más frecuente
+que ocurran en el océano Pacífico, donde son también más comunes los terremotos más
+devastadores de magnitudes considerables (especialmente las costas de Chile, Perú y
+Japón). Entre ellos tenemos el que golpeó al Perú en 1746 costando la vida de alrededor de
+10 000 personas; a Japón en 1896, causando la muerte de 28 000 personas, provocado por
+un terremoto de magnitud 8.5; y a Chile en 1960, donde murieron más de 1500 personas luego
+del terremoto de magnitud 9.5.`
+            },
+            {
+                type: 'question',
+                question: '¿Cuál es el tema central del texto?',
+                options: ['Los tsunamis o maremotos ', 'Las causas de tsunamis', 'Los tsunamis en el Pacífico.', 'Los tsunamis más letales'],
+                correct: 0
+            },
+            {
+                type: 'question',
+                question: '¿Cuál es la idea principal del texto?',
+                options: ['Los tsunamis pueden viajar a más de 800 kilómetros por hora en el punto más profundo del agua, sin embargo, disminuyen la velocidad a medida que se acercan a la costa.', 'Si bien cualquier océano puede experimentar un tsunami, es frecuente que ocurran en el océano Pacífico, donde son comunes los terremotos de grandes magnitudes.', 'Teniendo en cuenta que la profundidad habitual del Océano Pacífico es de unos 4000 metros, se podrían provocar olas gigantes que se moverían a 700 kilómetros por hora.', 'Un tsunami o maremoto es una serie de olas gigantescas que se produce en una masa de agua al ser empujada violentamente por una fuerza que la desplaza verticalmente.'],
+                correct: 3
+            },
+            {
+                type: 'text',
+                content: `Aristóteles creía que la Tierra era estacionaria y que el Sol, la Luna, los planetas y
+las estrellas se movían en órbitas circulares alrededor de ella. Creía eso porque estaba
+convencido de que la Tierra era el centro del universo y de que el movimiento circular era
+el más perfecto.
+La idea aristotélica fue desarrollada por Ptolomeo en el siglo II d. C. hasta constituir
+un modelo cosmológico completo. La Tierra permaneció en el centro, rodeada por ocho
+esferas que transportaban a la Luna, el Sol, las estrellas y los cinco planetas conocidos en
+aquel tiempo: Mercurio, Venus, Marte, Júpiter y Saturno. Los planetas se movían en
+círculos más pequeños engarzados en sus respectivas esferas para que así se pudieran
+explicar sus relativamente complicadas trayectorias celestes. La esfera más externa
+transportaba a las llamadas estrellas fijas, las cuales siempre permanecían en las mismas
+posiciones relativas, las unas con respecto a las otras, girando juntas a través del cielo.
+Lo que había detrás de la última esfera nunca fue descrito con claridad, pero ciertamente
+no era parte del universo observable por el hombre.
+El modelo de Ptolomeo proporcionaba un sistema razonablemente preciso para
+predecir las posiciones de los cuerpos celestes en el firmamento. Sin embargo, para
+poder predecir dichas posiciones correctamente, Ptolomeo tenía que asumir que la Luna
+seguía un camino que la situaba en algunos instantes dos veces más cerca de la Tierra
+que en otros. ¡Y esto significaba que la Luna debería aparecer a veces con tamaño doble
+del que usualmente tiene! Ptolomeo reconocía esta inconsistencia, a pesar de lo cual su
+modelo fue amplia, aunque no universalmente, aceptado. Fue adoptado por la Iglesia
+cristiana como la imagen del universo que estaba de acuerdo con las Escrituras, y que,
+además, presentaba la gran ventaja de dejar, fuera de la esfera de las estrellas fijas, una
+enorme cantidad de espacio para el cielo y el infierno.`
+            },
+            {
+                type: 'question',
+                question: '¿Cuál es el tema central del texto?',
+                options: ['El modelo cosmológico de Ptolomeo', 'Diferencias entre Aristóteles y Ptolomeo', 'El estatus de la Luna según Ptolomeo', 'La Iglesia cristiana y la verdad de Ptolomeo'],
+                correct: 0
+            },
+            {
+                type: 'question',
+                question: 'Con la expresión «girando juntas a través del cielo», se da a entender que las estrellas fijas',
+                options: ['carecían de movimiento.', 'se movían al unísono.', 'giraban perpetuamente.', 'eran como los planetas.'],
+                correct: 1
+            },
+            {
+                type: 'question',
+                question: 'Resulta incompatible con el texto aseverar que Ptolomeo',
+                options: ['sostenía que la Luna giraba en torno a la Tierra.', 'dotó a la Tierra de un movimiento muy simple.', 'erigió un sistema con algunas incoherencias.', 'tenía como fin hacer predicciones astronómicas.'],
+                correct: 1
+            },
+            {
+                type: 'text',
+                content: `Escoto Erigena dice no querer más felicidad que la inteligencia de las
+palabras divinas y, en consecuencia, la investigación de la verdad, en su
+pensamiento, va a confundirse con la interpretación de las Escrituras. Se pone así
+como punto de partida para tal búsqqueda el texto sagrado, de autoridad divina.
+Griegos o latinos, los Padres de la Iglesia son sus intérpretes, pero su autoridad de
+hombres no igualará nunca a la de Dios: como procede de la razón, es inferior a la
+autoridad divina.
+Por ello, debemos poner en su verdadero lugar a las autoridades patrísticas,
+de las que, sin embargo, se hace uso constante: la tarea de la razón consiste en
+comprender una revelación. Obra en extremo difícil como se hace notar en el
+siguiente pasaje: «Con el sudor de su frente la razón del hombre debe comer su
+pan, a saber, la palabra de Dios, y cultivar la tierra de las Santas Escrituras cubierta
+para él de espinas y de cardos, es decir, de la sutil complejidad de los pensamientos
+divinos».
+Este texto plantea el problema de la multiplicidad de sentidos que la Biblia
+presenta al creyente. En los Libros Santos hay tres órdenes de consideraciones:
+morales, físicas, teológicas. Según Erigena, cuando no se intenta ya determinar las
+virtudes, ni la naturaleza de los seres que vienen después de Dios, cuando se
+encuentra a través de la Escritura Santa a las cosas divinas mismas, se llega al
+grado supremo que puede alcanzar un intelecto.
+`
+            },
+            {
+                type: 'question',
+                question: 'PREGUNTA POR LA IDEA PRINCIPAL. En el texto se propugna fundamentalmente que',
+                options: ['El fin supremo de la razón es conocer la naturaleza divina.', 'se debe venerar la autoridad de los padres de la iglesia.', 'Escoto se adhiere al más acendrado racionalismo humanista.', 'la revelación divina no se puede comprender racionalmente.'],
+                correct: 0
+            }
+        ];
+
+        let currentStep = 0;
+        const answers = {};
+
+        function renderContent() {
+            const content = quizContent[currentStep];
+            const contentDiv = document.getElementById('quiz-content');
+
+            if (content.type === 'text') {
+                contentDiv.innerHTML = `
+                    <div class="text-content">
+                        ${content.content}
+                    </div>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="question">
+                        <h3>${content.question}</h3>
+                        <div class="options">
+                            ${content.options.map((option, index) => `
+                                <div class="option ${answers[currentStep] === index ? 'selected' : ''}" 
+                                     onclick="selectOption(${index})">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateProgressDots();
+        }
+
+        function selectOption(index) {
+            answers[currentStep] = index;
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelectorAll('.option')[index].classList.add('selected');
+        }
+
+        function updateProgressDots() {
+            const dotsContainer = document.getElementById('progress-dots');
+            dotsContainer.innerHTML = quizContent.map((_, index) => `
+                <div class="dot ${index === currentStep ? 'active' : ''}"></div>
+            `).join('');
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            const questions = quizContent.filter(item => item.type === 'question');
+            questions.forEach((q, index) => {
+                if (answers[index] === q.correct) correct++;
+            });
+            return (correct / questions.length) * 100;
+        }
+
+        function showResults() {
+            const score = calculateScore();
+            const questions = quizContent.filter(item => item.type === 'question');
+
+            // Ocultar el contenido del quiz y mostrar los resultados
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('progress-dots').style.display = 'none';
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+
+            // Actualizar el círculo de progreso
+            const circle = document.querySelector('.progress-ring .progress');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            const offset = circumference - (score / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            // Actualizar el texto del puntaje
+            document.querySelector('.score-text').textContent = `${Math.round(score)}%`;
+
+            // Mostrar la revisión de respuestas
+            const reviewDiv = document.querySelector('.answers-review');
+            reviewDiv.innerHTML = questions.map((q, index) => `
+                <div class="answer-item">
+                    <div class="question-text">${q.question}</div>
+                    <div>
+                        Tu respuesta: ${q.options[answers[index]]}
+                        ${answers[index] === q.correct
+                    ? '<span class="correct">✓ Correcto</span>'
+                    : `<span class="incorrect">✗ Incorrecto - Respuesta correcta: ${q.options[q.correct]}</span>`
+                }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            if (currentStep === quizContent.length - 1) {
+                showResults();
+            } else {
+                currentStep++;
+                renderContent();
+            }
+        });
+
+        // Iniciar el quiz
+        renderContent();
+    </script>
+</body>
+
+</html>
